@@ -165,6 +165,47 @@ module.exports = {
   + npm install typings -g 
   + typings install lodash
 
+* 使用typings下载的d.ts文件
+
+```json
+// tsconfig.json中
+{
+    
+    "compileOptions": {
+      "module" : "commonjs",
+      "target" : "es5",
+      "allowjs" : true,
+      // 通过配置路径 指向d.ts文件
+      "typeRoots": [
+          "./node_modules/@type",
+          "./typings/modules"
+      ]
+    },
+    "include" : [
+        "./src/*"
+    ],
+    "exclude" : [
+        "./node_modules/"
+    ]
+
+}
+ 
+```
+
+## 提取公用代码
+
+> 当前前段开发的一个主流的模式就是模块化开发，就一定会有其它模块，依赖于公共模块的现象，这一部分公共模块其实就是我们提到的公用代码，我们需要单独的将这些公用的代码 提取出来；
+
+* 减少代码冗余
+* 提升代码下载的速度
+
+### 通过CommonsChunkPlugin 来提取公用的代码
+
+> webpack optimize 下内置的一个插件 ： webpack.optimize.CommonsChunkPlugin
+
+* 配置语法： 
+
+```bash
  
  
 

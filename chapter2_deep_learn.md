@@ -205,7 +205,97 @@ module.exports = {
 
 * 配置语法： 
 
+# RXJS_learn
+
+
 ```bash
+{   
+    plugins: [
+        new webpack.optimize.CommonsChunkPlugin(option)
+    ]
+    
+}
+
+```
+
+* options.name or options.names 
+* options.filename 公用代码打包之后的文件名
+* options.minChunks ：  minChunks: number|Infinity|function(module, count) -> boolean,
+    + numbers 需要提取的代码，最小出现的次数是多少，超过这个次数，就将这一部分代码 剔除到公共代码部分；
+    + Infinity 出现时 不会将任何的代码 剔到公共的部分；
+    + function 我们可以在函数中，自定义代码提取的逻辑；
+* options.chunks 代码提取的范围，我们需要在哪几个代码之间，去提取公共的代码部分，有chunks去指定；
+* options.children | options.deepChildren 
+
+### 场景
+
+#### 单页应用
+
+```bash
+npm init
+
+# 安装webpack 在本地，之所要安装在本地，是因为我们使用的CommonjsChunkPlugin 是webpack自带的, 我们在配置文件中需要对webpack有一个依赖（require webpack）；  
+npm install webpack --save-dev
+
+```
+
+```js
+var webpack = require('webpack');
+var path = require('path');
+
+module.exports = {
+    entry: {
+        'pageA': './src/pageA'
+    },
+    output: {
+        path: path.resolve(__dirname, './dist'),
+        filename: '[name].bundle.js',
+        // 被剔除的公共代码 输出的文件；
+        chunkFilename: '[name].chunk.js'
+    },
+    plugins: [
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'common',
+            minChunks:2
+        })
+    ]
+
+}
+
+```
+
+#### 单页应用 + 第三方依赖 + webpack生成代码
+
+```js
+// lodash 是我们所引入的第三方库
+var webpack = require('webpack');
+var path = require('path');
+
+module.exports = {
+    entry: {
+        'pageA': './src/pageA',
+        'pageB': './src/pageB',
+        'vendor': ['lodash']
+    },
+    output: {
+        path: path.resolve(__dirname, './dist'),
+        filename: '[name].bundle.js',
+        // 被剔除的公共代码 输出的文件；
+        chunkFilename: '[name].chunk.js'
+    },
+    plugins: [
+        // 将我们所引入的第三方哭，单独的剔除到一个文件之中；
+        new webpack.optimize.CommonChunkPlugin({
+            // vendor与entry中的vendor相对应
+            name: 'vendor',
+            minChunks: Infinity
+        })
+        // 如果仅有上面的一个 CommonChunkPlugin 则我们所剔除的第三方库中，并不是纯净的只有第三方，其上面会有很多webpack加的东西；
+    ]
+
+}
+
+```
  
  
 

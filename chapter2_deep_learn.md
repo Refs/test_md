@@ -69,13 +69,41 @@ module.exports = {
 * Babel Polyfill ： polyfill(垫片 填充器)由于浏览器之间 对于 标准的实现不一致，所以我们需要一个垫片使它们保持同样的API
   + 全局垫片： 一旦我们引入polyfill我们就可以在全局范围内，即浏览器环境内 对其里面实现的API 进行调用，如promise generator ； 即我们一如之后，其就会在全局进行一些变量的定义，相当于对全局变量污染，所以很明显 其就是为了开发`应用`而准备的；（在全局的环境下面，不存在的方法，给其加上）
   + 为应用而准备： `开发应用`对比`开发框架`, 应用是写被自己使用的代码，而框架是开发被别人使用的代码，
-  + 使用： npm install babel-polyfill -save  ;  在文件前面引入 import "babel-polyfill"
+  + 使用： npm install babel-polyfill -save  ;  在entry文件前面引入 import "babel-polyfill"将其作为一个依赖；
 
 * Babel Runtime Transform : 与polyfill对比，这是一个局部的垫片
   + 局部垫片
   + 为开发框架准备： 1.其不会去污染全局变量（我们在开发将要被别人引入的代码，在开发的过程中需要去使用es6的一些函数与方法，而我们又不想去污染全局的变量，此时就会用到这个垫片； 即不会在全局范围内去增加新的变量，而只会在代码局部去新增一些变量，以不影响我们代码的使用；
   + 使用： npm install babel-plugin-transform-runtime -save-dev  npm install babel-runtime -save 
   + 在项目的根目录下新建一个.babelrc文件，在文件中去配置babel的一些参数，其中就包含 此插件的一些配置；
+  
+ * 利用.bablerc 来配置参数 等于是将babel-loader的配置参数单拿出来，单独作为babel的一个配置文件；
+ 
+ ```bash
+ # 在根目录新建文件.babelrc 作为 babel runtime时的配置文件
+ touch .babelrc
+ 
+ ```
+ 
+ > 若报错：  this.setDynamic is not a function, 说明 babel的版本与runtime 的版本不一致， 换一个版本 npm isntall @babel/runtime --save
+ 
+ npm install @babel/plugin-transform-runtime --save-dev
+ 
+```json
+// .babelrc中
+
+{
+    "presets" : [
+        "targets" : {
+            "browsers" : ["last 2 versions"]
+        }
+    ],
+    "plugins": ["@bable/transform-runtime"]
+}
+
+```
+ 
+ 
 
 
 

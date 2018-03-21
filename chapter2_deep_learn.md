@@ -102,6 +102,69 @@ module.exports = {
 }
 
 ```
+
+## 编译Typescript
+
+### typescript-loader
+
+* 安装： 
+  + 官方： npm install typescript ts-loader --save-dev
+  + 个人： npm install typescript awesome-typescript-loader --save-dev
+
+* 配置：需要同时去配置两个文件
+  + tsconfig.json
+  + webpack.config.js
+
+```js
+module.exports = {
+  entry: {
+     app : 'app.ts'
+  },
+  
+  output: {
+      filename: '[name].bundle.js'
+  },
+  module: {
+     rules: [
+        {
+            // ? 的意思是0个或者是1个，即结尾可能有两种方式ts tsx;
+            test: /\.tsx?$/,
+            use: {
+              loader: 'ts-loader'
+            }
+        }
+     ]
+  }
+}
+
+```
+
+```json
+// tsconfig.json中
+{
+    
+    "compileOptions": {
+      "module" : "commonjs",
+      "target" : "es5",
+      "allowjs" : true
+    },
+    "include" : [
+        "./src/*"
+    ],
+    "exclude" : [
+        "./node_modules/"
+    ]
+
+}
+ 
+```
+
+### typescript 与 其它js library 混用
+
+* typings
+  + npm install typings -g 
+  + typings install lodash
+
  
  
 

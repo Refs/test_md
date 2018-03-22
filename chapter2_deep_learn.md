@@ -26,11 +26,11 @@ module.exports = {
   entry: {
     app: 'app.js'
   },
-  
+
   output: {
     filename: '[name].[hash:8].js'
   },
-  
+
   module: {
     rules: [
       {
@@ -49,7 +49,7 @@ module.exports = {
               ['@bable/preset-env',{
                   targets: {
                     browser: ['> 1%', 'last 2 versions']
-                  } 
+                  }
                }]
             ]
           }
@@ -74,21 +74,21 @@ module.exports = {
 * Babel Runtime Transform : 与polyfill对比，这是一个局部的垫片
   + 局部垫片
   + 为开发框架准备： 1.其不会去污染全局变量（我们在开发将要被别人引入的代码，在开发的过程中需要去使用es6的一些函数与方法，而我们又不想去污染全局的变量，此时就会用到这个垫片； 即不会在全局范围内去增加新的变量，而只会在代码局部去新增一些变量，以不影响我们代码的使用；
-  + 使用： npm install babel-plugin-transform-runtime -save-dev  npm install babel-runtime -save 
+  + 使用： npm install babel-plugin-transform-runtime -save-dev  npm install babel-runtime -save
   + 在项目的根目录下新建一个.babelrc文件，在文件中去配置babel的一些参数，其中就包含 此插件的一些配置；
-  
+
  * 利用.bablerc 来配置参数 等于是将babel-loader的配置参数单拿出来，单独作为babel的一个配置文件；
- 
+
  ```bash
  # 在根目录新建文件.babelrc 作为 babel runtime时的配置文件
  touch .babelrc
- 
+
  ```
- 
+
  > 若报错：  this.setDynamic is not a function, 说明 babel的版本与runtime 的版本不一致， 换一个版本 npm isntall @babel/runtime --save
- 
+
  npm install @babel/plugin-transform-runtime --save-dev
- 
+
 ```json
 // .babelrc中
 
@@ -107,7 +107,7 @@ module.exports = {
 
 ### typescript-loader
 
-* 安装： 
+* 安装：
   + 官方： npm install typescript ts-loader --save-dev
   + 个人： npm install typescript awesome-typescript-loader --save-dev
 
@@ -120,7 +120,7 @@ module.exports = {
   entry: {
      app : 'app.ts'
   },
-  
+
   output: {
       filename: '[name].bundle.js'
   },
@@ -142,7 +142,7 @@ module.exports = {
 ```json
 // tsconfig.json中
 {
-    
+
     "compileOptions": {
       "module" : "commonjs",
       "target" : "es5",
@@ -156,13 +156,13 @@ module.exports = {
     ]
 
 }
- 
+
 ```
 
 ### typescript 与 其它js library 混用
 
 * typings
-  + npm install typings -g 
+  + npm install typings -g
   + typings install lodash
 
 * 使用typings下载的d.ts文件
@@ -170,7 +170,7 @@ module.exports = {
 ```json
 // tsconfig.json中
 {
-    
+
     "compileOptions": {
       "module" : "commonjs",
       "target" : "es5",
@@ -189,7 +189,7 @@ module.exports = {
     ]
 
 }
- 
+
 ```
 
 ## 提取公用代码
@@ -203,7 +203,7 @@ module.exports = {
 
 > webpack optimize 下内置的一个插件 ： webpack.optimize.CommonsChunkPlugin
 
-* 配置语法： 
+* 配置语法：
 
 # RXJS_learn
 
@@ -213,19 +213,19 @@ module.exports = {
     plugins: [
         new webpack.optimize.CommonsChunkPlugin(option)
     ]
-    
+
 }
 
 ```
 
-* options.name or options.names 
+* options.name or options.names
 * options.filename 公用代码打包之后的文件名
 * options.minChunks ：  minChunks: number|Infinity|function(module, count) -> boolean,
     + numbers 需要提取的代码，最小出现的次数是多少，超过这个次数，就将这一部分代码 剔除到公共代码部分；
     + Infinity 出现时 不会将任何的代码 剔到公共的部分；
     + function 我们可以在函数中，自定义代码提取的逻辑；
 * options.chunks 代码提取的范围，我们需要在哪几个代码之间，去提取公共的代码部分，有chunks去指定；
-* options.children | options.deepChildren 
+* options.children | options.deepChildren
 
 ### 场景
 
@@ -326,11 +326,11 @@ require.ensure
 * require.include
 
 > 当我们两个子模块，都去依赖一个第三方的模块， 我们就可以提前将第三个模块去放到父模块里面，这样分别动态加载子模块的时候，父模块中已经有了第三方的模块，也就不会动态去加载了： 如subPageA 与 subPageB 都依赖一个moduleA , 通过这种方式，我们就不会将moduleA 去分别打包到subPageA与subPageB里面，而是会将其打包到两者的父模块中；
- 
+
 ### Es 2015 Loader spec  动态import
 
 import('path/to/module') -> Promise
- 
+
 ### 代码分割 中的场景
 
 * 分离业务代码 和 第三方的依赖；
@@ -345,7 +345,7 @@ module.exports = {
   entry: {
     'pageA' : './src/pageA'
   },
-  
+
   output: {
     path: path.resolve(__dirname, './dist'),
     //publicPath 指定发布的路径 是用来告诉webpack ， 动态加载进来的代码(我们分割后的chunk)的路径是什么？
@@ -353,7 +353,7 @@ module.exports = {
     filename: '[name].bundle.js',
     chunkFilename: '[name].bundle.js'
   }
-  
+
 }
 
 ```
@@ -440,7 +440,7 @@ export default 'pageA'
 
 > 上述的代码中，我们将子页面subPageA 与subPageB的公共依赖moduleA 通过，require.include() 提到parent pageA里面，最后连同pageA的其他代码打包成pageA.bundle.js  这就做成了，我们最后得到的pageA.bundle.js不是纯净的pageA; 会将pageA与moduleA打包在一起；
 
-> 我们可以利用commonChunkPlugin结合代码分割 去做一个异步的参数  async，将上述提到的问题解决； 
+> 我们可以利用commonChunkPlugin结合代码分割 去做一个异步的参数  async，将上述提到的问题解决；
 
 subPageA与subPageB中同时会包含moduleA,我们希望通过commonChunkPlugin 来将moduleA提取出来，  
 
@@ -454,9 +454,6 @@ Extra async commons chunk 看官方文档，有例子；也可再view一遍：
 > 要解决的几个问题
 
 * 如何在webpack中去引入css,处理费js的文件 都要用到loader;
-
-
-
-
-
-
+* css modules
+* 配置less/ sass
+* 提取css代码

@@ -297,7 +297,7 @@ module.exports = {
 
 ```
 
-## 代码分割与懒加载
+## 代码分割与懒加载  （上面使用CommonChunkPlugin是对于有多个entry的情形下，对单个entry的代码我们使用如下的方式进行分割）
 
 > 在前端的整个优化过程中来说，一个很常见的手段就是对代码进行切分，是用户在浏览代码的时候，可以尽可能的去加载更少的代码，这个时候我们就需要用到，懒加载与代码分割；可以使用户在更少的下载时间内，看到其想看到的内容； web 应用会有很多的页面，但用户看的时候，一次只能看一个页面； 这个时候 如果让用户在只浏览一个页面的时候，去下载所有的代码，这势必会对用户的下载带宽造成一定的浪费；
 
@@ -353,6 +353,23 @@ module.exports = {
   }
   
 }
+
+```
+
+```js
+// 在上面的单entry pageA.js中 决定分割时的代码：
+
+if (page === 'subPageA') {
+  require.ensure(['./subPageA'],function(){
+    var subpageA = require('./subPageA')
+  },'subPageA')
+}else if(page ==== 'subPageB'){
+  require.ensure(['./subPageB'],function(){
+    var subPageB = require('./subPageB')
+  }.'subPageB')
+}
+
+
 
 ```
 

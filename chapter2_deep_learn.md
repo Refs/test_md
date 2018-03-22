@@ -359,8 +359,11 @@ module.exports = {
 ```js
 // 在上面的单entry pageA.js中 决定分割时的代码：
 
+// 由于subPageA与subPageB中同时会包含moduleA , 即如果分别打包subPageA与subPageB则两个打包之后的js文件里面，会同时包含moduleA; 此时我们无法去使用CommonChunkPlugin 因为这个插件是在多entry的情况下使用的；在我们单entry的情况下，我们可以利用require.include()来提取，由于pageA 同时依赖 subPageA subPageB lodash 而 subPageA 与subPageB 又同时依赖 moduleA 这个依赖结构树的情景下；此时我们可以考虑在pageA中提前将moduleA来提取出来；
+
 require.include('./moduleA')
 
+// 对于同一个页面下的两个子页面，可以将两个子页面的代码分别提取出来
 if (page === 'subPageA') {
   require.ensure(['./subPageA'],function(){
     var subpageA = require('./subPageA')
@@ -371,12 +374,19 @@ if (page === 'subPageA') {
   }.'subPageB')
 }
 
+// 如果我们仅是将lodash 在require.ensure中引进来，其只会在页面中去加载lodash,但并不去执行，只有在callback中require 其才会真正的去执行；
 require.ensure(['ladash'],function(){
   var _ = require('lodash');
   _.join(['1','2', '3'],'3')
 }.vendor)
 
 export default 'pageA'
+
+// 打包结果：
+// vendor.chunk.js
+// subPageA.chunk.js
+// subPageB.chunk.js
+// pageA.bundle.js
 
 ```
 

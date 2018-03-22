@@ -2,7 +2,7 @@
 
 ## 编译 ES6/7
 
-### Bable  Bable-loader  
+### Bable  Bable-loader
 
 ### Bable-presets
 
@@ -209,7 +209,7 @@ module.exports = {
 
 
 ```bash
-{   
+{
     plugins: [
         new webpack.optimize.CommonsChunkPlugin(option)
     ]
@@ -234,7 +234,7 @@ module.exports = {
 ```bash
 npm init
 
-# 安装webpack 在本地，之所要安装在本地，是因为我们使用的CommonjsChunkPlugin 是webpack自带的, 我们在配置文件中需要对webpack有一个依赖（require webpack）；  
+# 安装webpack 在本地，之所要安装在本地，是因为我们使用的CommonjsChunkPlugin 是webpack自带的, 我们在配置文件中需要对webpack有一个依赖（require webpack）；
 npm install webpack --save-dev
 
 ```
@@ -458,6 +458,82 @@ Extra async commons chunk 看官方文档，有例子；也可再view一遍：
 * 配置less/ sass
 * 提取css代码
 
-### style-loader
+### loader (处理css的loader需要 下面两个loader去配合使用)
 
+* style-loader
 > 是一个style标签，其可以帮助我们在我们需要载入的页面中去创建一个style 标签，标签中的内容就是我们css的内容；
+
+* css-loader : 与style-loader的作用不同 后者主要是在创建标签这一块，即如何将我们的css创建到我们的文档流中，css-loader做的工作就是 如何才能让我们的js去import一个css文件进来，其会包装一层，使得我们的js中可以去使用import一个css文件的方式；
+
+* style-loader 包含:  style-loader style-loader/url style-loader/useable
+
+```bash
+npm install style-loader css-loader --save-dev
+```
+
+> css-loader 配合 style-loader的使用配置 : 当我们的页面中引入 app.bundle.js时候，页面渲染的时候会生成一对<style>标签，里面存有我们的样式；
+
+```js
+var path = require('path');
+
+module.exports = {
+  entry: {
+    app: './src/app.js'
+  },
+  output: {
+    path: path.resolve(__dirname + ./dist),
+    filename: [name].bundle.js,
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [
+          // 注意两个loader 的顺序 越放到后面的loader 越会被先接触，也就是说我们需要先将我们的css-loader处理完，js中import的css; 让后将css交给style-loader 让其将我们的css放到页面上；
+          {
+            loader: 'style-loader'
+          },
+          {
+            loader: 'css-loader'
+          }
+        ]
+      }
+    ]
+  }
+}
+
+```
+
+> style-loader/url 配合 file-loader使用  : 这样我们每在页面上去引用一个css，webpack 就会在index.html中 生成几个link便签，并引用相应的css; 因为默认的引用路径是根目录，所以我们需要在output中去添加publicPath去指定 默认的引用路径；
+
+```js
+var path = require('path');
+
+module.exports = {
+  entry: {
+    app: './src/app.js'
+  },
+  output: {
+    path: path.resolve(__dirname + ./dist),
+    publicPath: './dist/'
+    filename: [name].bundle.js,
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [
+          // 注意两个loader 的顺序 越放到后面的loader 越会被先接触，也就是说我们需要先将我们的css-loader处理完，js中import的css; 让后将css交给style-loader 让其将我们的css放到页面上；
+          {
+            loader: 'style-loader/url'
+          },
+          {
+            loader: 'file-loader'
+          }
+        ]
+      }
+    ]
+  }
+}
+
+```

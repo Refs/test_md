@@ -348,6 +348,8 @@ module.exports = {
   
   output: {
     path: path.resolve(__dirname, './dist'),
+    //publicPath 指定发布的路径 是用来告诉webpack ， 动态加载进来的代码(我们分割后的chunk)的路径是什么？
+    publicPath: ''
     filename: '[name].bundle.js',
     chunkFilename: '[name].bundle.js'
   }
@@ -363,6 +365,7 @@ module.exports = {
 
 require.include('./moduleA')
 
+var page = "subPageA";
 // 对于同一个页面下的两个子页面，可以将两个子页面的代码分别提取出来
 if (page === 'subPageA') {
   require.ensure(['./subPageA'],function(){
@@ -392,11 +395,21 @@ export default 'pageA'
 
 > webpack 是如何将我们分割以后的代码，加载到页面当中来；
 
+```html
+<html>
+  <body>
+    // 虽然代码被分成了好多的chunk，当我们的index.html中 只需要去引入一个pageA.bundle.js 因为我们webpack.config.js中止配置一个entry，理论上只会生成一个bundle.js ; 引入之后运行的时候，webpack会帮我们将提取后的chunk按需加载进来，注意次数的chunk 类似于静态文件，我们需要在webpack.output, 通过publicPath 指定一个公共的静态资源托管路径；具体见官网publicPath;
+    <script src="./dist/pageA.bundle.js">
+  </body>
+</html>
+```
+
+* 将上面的代码修改成import()的形式，原因是require.ensure()已经被淘汰过了；
+
+```js
 
 
-
-
-* 分离业务代码 和 业务公共代码 和 第三方依赖
+```
 
 * 分离首次加载 和 访问后加载的代码
 

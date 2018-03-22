@@ -406,8 +406,35 @@ export default 'pageA'
 
 * 将上面的代码修改成import()的形式，原因是require.ensure()已经被淘汰过了；
 
-```js
+> 动态import()与require.ensure()是不一样的，其会去执行，而并不是仅仅将我们的代码引入到页面中，将我们将代码import()进来的时候，我们的代码就已经执行一遍了（这一点类似于node.js 中的require()）
 
+```js
+require.include('./moduleA')
+
+var page = 'subPageA'
+
+if(page === 'subPageA') {
+  import(
+    /* webpackChunkName: 'subPageA' */
+    './subPageA'
+  ).then(function(subPageA){
+    console.log(subPageA)
+  })
+} else if( page === 'subPageB') {
+  import(
+    /* webpackChunkName: 'subPageB' */
+    './subPageB'
+  ).then(function(subPageB){
+    console.log(subPageB)
+  })
+}
+
+require.ensure(['ladash'],function(){
+  var _ = require('lodash');
+  _.join(['1','2', '3'],'3')
+}.vendor)
+
+export default 'pageA'
 
 ```
 

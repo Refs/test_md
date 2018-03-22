@@ -307,7 +307,9 @@ module.exports = {
 
 * Es 2015 Loader spec
 
-### require.ensure
+### webpack methods
+
+* require.ensure
 
 > 通过该方法 我们可以动态的去加载一些模块，该方法接受四个参数：
 
@@ -321,8 +323,42 @@ require.ensure
 // require.ensure(dependencies: String[], callback: function(require), errorCallback: function(error), chunkName: String)
 ```
 
+* require.include
+
+> 当我们两个子模块，都去依赖一个第三方的模块， 我们就可以提前将第三个模块去放到父模块里面，这样分别动态加载子模块的时候，父模块中已经有了第三方的模块，也就不会动态去加载了： 如subPageA 与 subPageB 都依赖一个moduleA , 通过这种方式，我们就不会将moduleA 去分别打包到subPageA与subPageB里面，而是会将其打包到两者的父模块中；
  
+### Es 2015 Loader spec  动态import
+
+import('path/to/module') -> Promise
  
+### 代码分割 中的场景
+
+* 分离业务代码 和 第三方的依赖；
+
+```js
+// pageA 同时依赖 subPageA subPageB lodash 而 subPageA 与subPageB 又同时依赖 moduleA 这个依赖结构树的情景下；
+
+var webpack = require('webpack');
+var path = require('path');
+
+module.exports = {
+  entry: {
+    'pageA' : './src/pageA'
+  },
+  
+  output: {
+    path: path.resolve(__dirname, './dist'),
+    filename: '[name].bundle.js',
+    chunkFilename: '[name].bundle.js'
+  }
+  
+}
+
+```
+
+* 分离业务代码 和 业务公共代码 和 第三方依赖
+
+* 分离首次加载 和 访问后加载的代码
 
 
 

@@ -359,6 +359,8 @@ module.exports = {
 ```js
 // 在上面的单entry pageA.js中 决定分割时的代码：
 
+require.include('./moduleA')
+
 if (page === 'subPageA') {
   require.ensure(['./subPageA'],function(){
     var subpageA = require('./subPageA')
@@ -369,7 +371,12 @@ if (page === 'subPageA') {
   }.'subPageB')
 }
 
+require.ensure(['ladash'],function(){
+  var _ = require('lodash');
+  _.join(['1','2', '3'],'3')
+}.vendor)
 
+export default 'pageA'
 
 ```
 

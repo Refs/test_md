@@ -284,19 +284,36 @@ module.exports = {
         chunkFilename: '[name].chunk.js'
     },
     plugins: [
-        // 将我们所引入的第三方哭，单独的剔除到一个文件之中；
+        // 1. 将我们代码文件的公共部分提取出来；
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'common',
+            minChunks: 2,
+             // 指定入口文件 用于解决 : Error in CommonChunkPlugin:  while runing in normal mode it's not allowed to use a non-entry chunk(vendor)
+            chunks: ['pageA','pageB']
+        })
+
+        // 2. 将第三方库 单独取出来；
+        // 将我们所引入的第三方库，单独的剔除到一个文件之中；
         new webpack.optimize.CommonChunkPlugin({
             // vendor与entry中的vendor相对应
             name: 'vendor',
             minChunks: Infinity
         })
-        // 如果仅有上面的一个 CommonChunkPlugin 则我们所剔除的第三方库中，并不是纯净的只有第三方，其上面会有很多webpack加的东西；
+        // 如果仅有上面的一个 CommonChunkPlugin 则我们所剔除的第三方库中，并不是纯净的只有第三方，其上面会有很多webpack加的东西；如果我们想要得到纯净的第三方(没有webpack加的东西)，我们需要配置一个新的webpack.optimize.CommonChunkPlugin的实例
+
+        // 3. 将webpack的配置代码单独取出来
+        new webpack.optimize.CommonChunkPlugin({
+            // name 与 entry.name 的名称不重复；
+            name: 'manifest',
+            minChunks: Infinity
+        })
+        // 上面 所有引入的第三方库，entry.vendor里面的数组中指定的元素，都会打包到vendor.chunk.js
+        // 所有webpack附加
     ]
 
 }
 
 ```
- 
  
 
 

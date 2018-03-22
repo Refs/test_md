@@ -457,3 +457,7 @@ Extra async commons chunk 看官方文档，有例子；也可再view一遍：
 * css modules
 * 配置less/ sass
 * 提取css代码
+
+### style-loader
+
+> 是一个style标签，其可以帮助我们在我们需要载入的页面中去创建一个style 标签，标签中的内容就是我们css的内容；

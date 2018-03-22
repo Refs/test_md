@@ -297,36 +297,30 @@ module.exports = {
 
 ```
 
-```js
-// lodash 是我们所引入的第三方库
-var webpack = require('webpack');
-var path = require('path');
+## 代码分割与懒加载
 
-module.exports = {
-    entry: {
-        'pageA': './src/pageA',
-        'pageB': './src/pageB',
-        'vendor': ['lodash']
-    },
-    output: {
-        path: path.resolve(__dirname, './dist'),
-        filename: '[name].bundle.js',
-        // 被剔除的公共代码 输出的文件；
-        chunkFilename: '[name].chunk.js'
-    },
-    plugins: [
-        // 将我们所引入的第三方哭，单独的剔除到一个文件之中；
-        new webpack.optimize.CommonChunkPlugin({
-            // vendor与entry中的vendor相对应
-            name: 'vendor',
-            minChunks: Infinity
-        })
-        // 如果仅有上面的一个 CommonChunkPlugin 则我们所剔除的第三方库中，并不是纯净的只有第三方，其上面会有很多webpack加的东西；
-    ]
+> 在前端的整个优化过程中来说，一个很常见的手段就是对代码进行切分，是用户在浏览代码的时候，可以尽可能的去加载更少的代码，这个时候我们就需要用到，懒加载与代码分割；可以使用户在更少的下载时间内，看到其想看到的内容； web 应用会有很多的页面，但用户看的时候，一次只能看一个页面； 这个时候 如果让用户在只浏览一个页面的时候，去下载所有的代码，这势必会对用户的下载带宽造成一定的浪费；
 
-}
+> 在webpack中，代码分割与懒加载其实是一个事情，webpack会帮我们在自动分割代码之后，再帮我们将需要的代码加载进来， 虽然webpack中有上述的功能，但并不是通过配置webpack为其增加这个功能，不是在配置文件中，而是通过改变我们写代码的方式；当我们依赖一个模块的时候，我们需要告诉webpack我们要去分割这个模块，在webpack中我们可以通过两种方式来做到这一点：
 
+* 通过webpack中内置实现的方法：webpack methods
+
+* Es 2015 Loader spec
+
+### require.ensure
+
+> 通过该方法 我们可以动态的去加载一些模块，该方法接受四个参数：
+
+```bash
+
+require.ensure
+  []: dependencies 此处我们将依赖加载进来，但并不会将代码执行，
+  callback: 代码会在callback中去执行
+  errorCallback
+  chunkName
+// require.ensure(dependencies: String[], callback: function(require), errorCallback: function(error), chunkName: String)
 ```
+
  
  
 

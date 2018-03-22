@@ -438,9 +438,22 @@ export default 'pageA'
 
 ```
 
+> 上述的代码中，我们将子页面subPageA 与subPageB的公共依赖moduleA 通过，require.include() 提到parent pageA里面，最后连同pageA的其他代码打包成pageA.bundle.js  这就做成了，我们最后得到的pageA.bundle.js不是纯净的pageA; 会将pageA与moduleA打包在一起；
+
+> 我们可以利用commonChunkPlugin结合代码分割 去做一个异步的参数  async，将上述提到的问题解决； 
+
+subPageA与subPageB中同时会包含moduleA,我们希望通过commonChunkPlugin 来将moduleA提取出来，  
+
+Extra async commons chunk 看官方文档，有例子；也可再view一遍：
+
 * 分离首次加载 和 访问后加载的代码
 
 
+## 处理css
+
+> 要解决的几个问题
+
+* 如何在webpack中去引入css,处理费js的文件 都要用到loader;
 
 
 
